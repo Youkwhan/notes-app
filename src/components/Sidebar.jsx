@@ -5,7 +5,7 @@ import "./Sidebar.css";
 export default function Sidebar(props) {
 	// array of jsx; onClick on each tab (div) to listen and setCurrentNodeId on the one we click.
 	// On render if one of the tab's id === currentNodeId give it the selected-note CSS
-	const noteElements = props.notes.map((note, index) => {
+	const noteElements = props.notes.map((note) => {
 		return (
 			<div key={note.id}>
 				<div
@@ -14,7 +14,7 @@ export default function Sidebar(props) {
 					}`}
 					onClick={() => props.setCurrentNoteId(note.id)}
 				>
-					<h4 className="text-snippet">Note {index + 1}</h4>
+					<h4 className="text-snippet">{note.body.split("\n")[0]}</h4>
 				</div>
 			</div>
 		);

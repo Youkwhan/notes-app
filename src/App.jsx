@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Split from "react-split";
 import { nanoid } from "nanoid";
 
-import { data } from "./data.js";
+// import { data } from "./data.js";
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import "./App.css";
@@ -43,13 +43,19 @@ export default function App() {
 
 	// void, update the current note.body's text
 	function updateNote(text) {
-		setNotes((prevNotes) =>
-			prevNotes.map((prevNote) => {
-				return prevNote.id === currentNoteId
-					? { ...prevNote, body: text }
-					: prevNote;
-			})
-		);
+		// Put the most recently-modified note at the top
+		setNotes((prevNotes) => {
+			const newArray = [];
+			for (let i = 0; i < prevNotes.length; i++) {
+				const prevNote = prevNotes[i];
+				if (prevNote.id === currentNoteId) {
+					newArray.unshift({ ...prevNote, body: text });
+				} else {
+					newArray.push(prevNote);
+				}
+			}
+			return newArray;
+		});
 	}
 
 	// IF notes.length; render our <Split /> panels, which includes sidebar and editor;
