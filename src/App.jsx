@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import Split from "react-split";
 import { nanoid } from "nanoid";
+import { onSnapshot } from "firebase/firestore";
 
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import "./App.css";
+import { notesCollection } from "./config/firebase";
 
 export default function App() {
 	// notes: object holding all our {notes id: body}
 	// currentNodeId: initalize current as first item in notes OR ""
-	const [notes, setNotes] = useState(
-		() => JSON.parse(localStorage.getItem("notes")) || []
-	);
+	const [notes, setNotes] = useState([]);
 	//notes[0]?.id === (notes[0] && notes[0].id)
 	const [currentNoteId, setCurrentNoteId] = useState(notes[0]?.id || "");
 
@@ -20,8 +20,17 @@ export default function App() {
 		notes.find((note) => note.id === currentNoteId) || notes[0];
 
 	useEffect(() => {
-		localStorage.setItem("notes", JSON.stringify(notes));
-	}, [notes]);
+		const unsubscribe = onSnapshot(notesCollection, function (snapshot) {
+			// Sync up our local notes array with the snapshot data
+			const notesArr = snapshot.docs.map((doc) => ({
+				...doc.data(),
+				id: doc.id,
+			}));
+			setNotes(notesArr);
+		});
+		// when component unmount, clean up and close listener
+		return unsubscribe;
+	}, []);
 
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id
