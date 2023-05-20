@@ -3,13 +3,6 @@ import "./Sidebar.css";
 
 // jsx; Render noteElements tabs, able to focus and select a tab, create a new tab
 export default function Sidebar(props) {
-	Sidebar.propTypes = {
-		notes: PropTypes.array.isRequired,
-		currentNote: PropTypes.object.isRequired,
-		setCurrentNoteId: PropTypes.func.isRequired,
-		newNote: PropTypes.func.isRequired,
-	};
-
 	// array of jsx; onClick on each tab (div) to listen and setCurrentNodeId on the one we click.
 	// On render if one of the tab's id === currentNodeId give it the selected-note CSS
 	const noteElements = props.notes.map((note, index) => {
@@ -39,3 +32,10 @@ export default function Sidebar(props) {
 		</section>
 	);
 }
+
+Sidebar.propTypes = {
+	notes: PropTypes.array.isRequired,
+	currentNote: PropTypes.object.isRequired,
+	setCurrentNoteId: PropTypes.func.isRequired,
+	newNote: PropTypes.func.isRequired,
+};

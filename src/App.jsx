@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Split from "react-split";
 import { nanoid } from "nanoid";
 
-// import { data } from "./data.js";
+import { data } from "./data.js";
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import "./App.css";
@@ -10,10 +10,16 @@ import "./App.css";
 export default function App() {
 	// notes: object holding all our {notes id: body}
 	// currentNodeId: initalize current as first item in notes OR ""
-	const [notes, setNotes] = useState([]);
+	const [notes, setNotes] = useState(
+		JSON.parse(localStorage.getItem("notes")) || []
+	);
 	const [currentNoteId, setCurrentNoteId] = useState(
 		(notes[0] && notes[0].id) || ""
 	);
+
+	useEffect(() => {
+		localStorage.setItem("notes", JSON.stringify(notes));
+	}, [notes]);
 
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id

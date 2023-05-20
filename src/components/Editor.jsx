@@ -6,11 +6,6 @@ import PropTypes from "prop-types";
 export default function Editor({ currentNote, updateNote }) {
 	const [selectedTab, setSelectedTab] = useState("write");
 
-	Editor.propTypes = {
-		currentNote: PropTypes.object.isRequired,
-		updateNote: PropTypes.func.isRequired,
-	};
-
 	// preview tab basically
 	const converter = new Showdown.Converter({
 		tables: true,
@@ -36,3 +31,8 @@ export default function Editor({ currentNote, updateNote }) {
 		</section>
 	);
 }
+
+Editor.propTypes = {
+	currentNote: PropTypes.object.isRequired,
+	updateNote: PropTypes.func.isRequired,
+};
