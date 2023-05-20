@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Split from "react-split";
 import { nanoid } from "nanoid";
 
-// import { data } from "./data.js";
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import "./App.css";
@@ -13,9 +12,12 @@ export default function App() {
 	const [notes, setNotes] = useState(
 		() => JSON.parse(localStorage.getItem("notes")) || []
 	);
-	const [currentNoteId, setCurrentNoteId] = useState(
-		(notes[0] && notes[0].id) || ""
-	);
+	//notes[0]?.id === (notes[0] && notes[0].id)
+	const [currentNoteId, setCurrentNoteId] = useState(notes[0]?.id || "");
+
+	// Every time we re-render, we find the selected note object
+	const currentNote =
+		notes.find((note) => note.id === currentNoteId) || notes[0];
 
 	useEffect(() => {
 		localStorage.setItem("notes", JSON.stringify(notes));
@@ -30,15 +32,6 @@ export default function App() {
 		};
 		setNotes((prevNotes) => [newNote, ...prevNotes]);
 		setCurrentNoteId(newNote.id);
-	}
-
-	// return note obj; If note obj doesnt exist inside notes, return the 1st note by default
-	function findCurrentNote() {
-		return (
-			notes.find((note) => {
-				return note.id === currentNoteId;
-			}) || notes[0]
-		);
 	}
 
 	// void, update the current note.body's text
@@ -73,13 +66,13 @@ export default function App() {
 				<Split sizes={[30, 70]} direction="horizontal" className="split">
 					<Sidebar
 						notes={notes}
-						currentNote={findCurrentNote()}
+						currentNote={currentNote}
 						setCurrentNoteId={setCurrentNoteId}
 						newNote={createNewNote}
 						deleteNote={deleteNote}
 					/>
 					{currentNoteId && notes.length > 0 && (
-						<Editor currentNote={findCurrentNote()} updateNote={updateNote} />
+						<Editor currentNote={currentNote} updateNote={updateNote} />
 					)}
 				</Split>
 			) : (
