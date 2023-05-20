@@ -9,10 +9,11 @@
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	border-bottom: 1px solid #c8ccd0;
 }
 
 .sidebar--header > h3 {
-	font-size: 1.75rem;
+	font-size: 2rem;
 }
 
 .new-note {
@@ -33,6 +34,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 1em;
 }
 
 .title--delete {
@@ -52,7 +54,7 @@
 
 .text-snippet {
 	padding-inline: 5px;
-	font-size: 0.8rem;
+	font-size: 1rem;
 	font-weight: 400;
 	line-height: 1.2rem;
 	color: #4a4e74;

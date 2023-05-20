@@ -29,3 +29,7 @@ img {
 button:focus {
    outline: none;
 }
+
+button {
+   padding: 0.5em;
+}
