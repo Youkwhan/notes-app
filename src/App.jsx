@@ -58,6 +58,13 @@ export default function App() {
 		});
 	}
 
+	function deleteNote(event, noteId) {
+		// stop the click event from propagating up to the parent
+		// since parent also has it's own click event (selector, but if element is gone from DOM the parent click event will have error).
+		event.stopPropagation();
+		setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
+	}
+
 	// IF notes.length; render our <Split /> panels, which includes sidebar and editor;
 	// ELSE button to create new a note;
 	return (
@@ -69,6 +76,7 @@ export default function App() {
 						currentNote={findCurrentNote()}
 						setCurrentNoteId={setCurrentNoteId}
 						newNote={createNewNote}
+						deleteNote={deleteNote}
 					/>
 					{currentNoteId && notes.length > 0 && (
 						<Editor currentNote={findCurrentNote()} updateNote={updateNote} />
