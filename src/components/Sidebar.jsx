@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import "./Sidebar.css";
 
 // jsx; Render noteElements tabs, able to focus and select a tab, create a new tab
 export default function Sidebar(props) {

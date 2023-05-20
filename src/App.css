@@ -1,4 +1,13 @@
-/* New Notes Menu */
+.split {
+   display: flex;
+}
+
+.pane {
+	overflow-y: auto;
+	/* padding: 10px; */
+}
+
+/* Create New Notes Menu */
 .no-notes {
    width: 100%;
    height: 100vh;
@@ -17,3 +26,4 @@
    border-radius: 3px;
    padding: 1rem;
 }
+
