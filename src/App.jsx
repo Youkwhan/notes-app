@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import Split from "react-split";
-import { nanoid } from "nanoid";
-import { onSnapshot, addDoc } from "firebase/firestore";
+// import { nanoid } from "nanoid";
+import { onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
 
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import "./App.css";
-import { notesCollection } from "./config/firebase";
+import { notesCollection, db } from "./config/firebase";
 
 export default function App() {
 	// notes: object holding all our {notes id: body}
@@ -39,7 +39,7 @@ export default function App() {
 			// id: nanoid(), Firestore will create it's own id
 			body: "# Type your markdown note's title here",
 		};
-		const newNoteRef = await addDoc(notesCollection, newNote)
+		const newNoteRef = await addDoc(notesCollection, newNote);
 		setCurrentNoteId(newNoteRef.id);
 	}
 
@@ -60,11 +60,9 @@ export default function App() {
 		});
 	}
 
-	function deleteNote(event, noteId) {
-		// stop the click event from propagating up to the parent
-		// since parent also has it's own click event (selector, but if element is gone from DOM the parent click event will have error).
-		event.stopPropagation();
-		setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
+	async function deleteNote(noteId) {
+		const docRef = doc(db, "notes", noteId);
+		await deleteDoc(docRef);
 	}
 
 	// IF notes.length; render our <Split /> panels, which includes sidebar and editor;
