@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Split from "react-split";
 import { nanoid } from "nanoid";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, addDoc } from "firebase/firestore";
 
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
@@ -34,13 +34,13 @@ export default function App() {
 
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id
-	function createNewNote() {
+	async function createNewNote() {
 		const newNote = {
-			id: nanoid(),
+			// id: nanoid(), Firestore will create it's own id
 			body: "# Type your markdown note's title here",
 		};
-		setNotes((prevNotes) => [newNote, ...prevNotes]);
-		setCurrentNoteId(newNote.id);
+		const newNoteRef = await addDoc(notesCollection, newNote)
+		setCurrentNoteId(newNoteRef.id);
 	}
 
 	// void, update the current note.body's text
