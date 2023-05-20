@@ -11,7 +11,7 @@ export default function App() {
 	// notes: object holding all our {notes id: body}
 	// currentNodeId: initalize current as first item in notes OR ""
 	const [notes, setNotes] = useState(
-		JSON.parse(localStorage.getItem("notes")) || []
+		() => JSON.parse(localStorage.getItem("notes")) || []
 	);
 	const [currentNoteId, setCurrentNoteId] = useState(
 		(notes[0] && notes[0].id) || ""
