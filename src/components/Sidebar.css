@@ -10,10 +10,12 @@
 	justify-content: space-around;
 	align-items: center;
 	border-bottom: 1px solid #c8ccd0;
+	padding: 1em;
 }
 
 .sidebar--header > h3 {
 	font-size: 2rem;
+	font-weight: 700;
 }
 
 .new-note {
@@ -22,8 +24,8 @@
 	border: none;
 	color: white;
 	border-radius: 3px;
-	height: 30px;
-	width: 30px;
+
+	width: 2rem;
 }
 
 /* noteElement tabs */
