@@ -15,9 +15,22 @@ export default function App() {
 	//notes[0]?.id === (notes[0] && notes[0].id)
 	const [currentNoteId, setCurrentNoteId] = useState("");
 
-	// Every time we re-render, we find the selected note object. Logic to see if we have items or not and render "Create New Note" menu
+	// Every render, initalize currentNode object. Logic to find the object else render "Create New Note" menu
 	const currentNote =
 		notes.find((note) => note.id === currentNoteId) || notes[0];
+
+	const sortedNotes = notes.sort(compareTime);
+
+	// my LRU function
+	function compareTime(a, b) {
+		if (a.updatedAt > b.updatedAt) {
+			return -1; // sort a before b
+		}
+		if (a.updatedAt < b.updatedAt) {
+			return 1; // sort a after b
+		}
+		return 0; // keep original order
+	}
 
 	// Sync notes with our db
 	useEffect(() => {
@@ -33,8 +46,7 @@ export default function App() {
 		return unsubscribe;
 	}, []);
 
-	// Anytime the notes array changes, if we don't have a currentNoteId, set it.
-	// When we rerender, snapshot listen and sync notes => sets our currentNodeId.
+	// Anytime the notes array changes, if we don't have a currentNoteId, set it. (Which will happen when we delete all notes or First load waiting for data to come in)
 	useEffect(() => {
 		if (!currentNoteId) {
 			setCurrentNoteId(notes[0]?.id);
@@ -47,6 +59,8 @@ export default function App() {
 		const newNote = {
 			// id: nanoid(), Firestore will create it's own id
 			body: "# Type your markdown note's title here",
+			createdAt: Date.now(),
+			updatedAt: Date.now(),
 		};
 		const newNoteRef = await addDoc(notesCollection, newNote);
 		setCurrentNoteId(newNoteRef.id);
@@ -55,7 +69,11 @@ export default function App() {
 	// void, update the current note.body's text for every keystroke
 	async function updateNote(text) {
 		const docRef = doc(db, "notes", currentNoteId);
-		await setDoc(docRef, { body: text }, { merge: true });
+		await setDoc(
+			docRef,
+			{ body: text, updatedAt: Date.now() },
+			{ merge: true }
+		);
 	}
 
 	async function deleteNote(noteId) {
@@ -70,7 +88,7 @@ export default function App() {
 			{notes.length > 0 ? (
 				<Split sizes={[30, 70]} direction="horizontal" className="split">
 					<Sidebar
-						notes={notes}
+						notes={sortedNotes}
 						currentNote={currentNote}
 						setCurrentNoteId={setCurrentNoteId}
 						newNote={createNewNote}
