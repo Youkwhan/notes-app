@@ -10,6 +10,7 @@ The Notes App is a web application built using React. It aims to provide users w
 This app has been designed to provide a simple yet powerful experience, with a focus on feature parity with the Github Markdown editor.
 
 ## Demo Video
+https://github.com/Youkwhan/notes-app/assets/37788922/12fda28c-dfa0-4f3e-ad82-aa8701409205
 
 ## Features:
 - **Markdown Formatting**: The app supports a wide range of Markdown syntax, allowing you to format your notes exactly the way you want. You can easily create headings, emphasize text, create lists, insert links, images, and code snippets, and even add tables to organize your information effectively.
