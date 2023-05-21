@@ -62,6 +62,15 @@ export default function App() {
 		}
 	}, [currentNote]);
 
+	// To send our currentNote's tempNoteText to our db.
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			updateNote(tempNoteText);
+		}, 500);
+		// If run again, reset our timer by canceling the old one
+		return () => clearTimeout(timeoutId);
+	}, [tempNoteText]);
+
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id
 	async function createNewNote() {
