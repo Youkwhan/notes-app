@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Split from "react-split";
 // import { nanoid } from "nanoid";
-import { onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { onSnapshot, addDoc, doc, deleteDoc, setDoc } from "firebase/firestore";
 
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
@@ -13,12 +13,13 @@ export default function App() {
 	// currentNodeId: initalize current as first item in notes OR ""
 	const [notes, setNotes] = useState([]);
 	//notes[0]?.id === (notes[0] && notes[0].id)
-	const [currentNoteId, setCurrentNoteId] = useState(notes[0]?.id || "");
+	const [currentNoteId, setCurrentNoteId] = useState("");
 
-	// Every time we re-render, we find the selected note object
+	// Every time we re-render, we find the selected note object. Logic to see if we have items or not and render "Create New Note" menu
 	const currentNote =
 		notes.find((note) => note.id === currentNoteId) || notes[0];
 
+	// Sync notes with our db
 	useEffect(() => {
 		const unsubscribe = onSnapshot(notesCollection, function (snapshot) {
 			// Sync up our local notes array with the snapshot data
@@ -32,6 +33,14 @@ export default function App() {
 		return unsubscribe;
 	}, []);
 
+	// Anytime the notes array changes, if we don't have a currentNoteId, set it.
+	// When we rerender, snapshot listen and sync notes => sets our currentNodeId.
+	useEffect(() => {
+		if (!currentNoteId) {
+			setCurrentNoteId(notes[0]?.id);
+		}
+	}, [notes]);
+
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id
 	async function createNewNote() {
@@ -43,21 +52,10 @@ export default function App() {
 		setCurrentNoteId(newNoteRef.id);
 	}
 
-	// void, update the current note.body's text
-	function updateNote(text) {
-		// Put the most recently-modified note at the top
-		setNotes((prevNotes) => {
-			const newArray = [];
-			for (let i = 0; i < prevNotes.length; i++) {
-				const prevNote = prevNotes[i];
-				if (prevNote.id === currentNoteId) {
-					newArray.unshift({ ...prevNote, body: text });
-				} else {
-					newArray.push(prevNote);
-				}
-			}
-			return newArray;
-		});
+	// void, update the current note.body's text for every keystroke
+	async function updateNote(text) {
+		const docRef = doc(db, "notes", currentNoteId);
+		await setDoc(docRef, { body: text }, { merge: true });
 	}
 
 	async function deleteNote(noteId) {
@@ -78,9 +76,7 @@ export default function App() {
 						newNote={createNewNote}
 						deleteNote={deleteNote}
 					/>
-					{currentNoteId && notes.length > 0 && (
-						<Editor currentNote={currentNote} updateNote={updateNote} />
-					)}
+					<Editor currentNote={currentNote} updateNote={updateNote} />
 				</Split>
 			) : (
 				<div className="no-notes">
