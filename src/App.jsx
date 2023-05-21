@@ -65,7 +65,9 @@ export default function App() {
 	// To send our currentNote's tempNoteText to our db.
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
-			updateNote(tempNoteText);
+			if (tempNoteText !== currentNote.body) {
+				updateNote(tempNoteText);
+			}
 		}, 500);
 		// If run again, reset our timer by canceling the old one
 		return () => clearTimeout(timeoutId);
