@@ -14,6 +14,8 @@ export default function App() {
 	const [notes, setNotes] = useState([]);
 	//notes[0]?.id === (notes[0] && notes[0].id)
 	const [currentNoteId, setCurrentNoteId] = useState("");
+	// Editor component state to hold our currentNote's body text, so we dont have to keep updating db for each keystroke
+	const [tempNoteText, setTempNoteText] = useState("");
 
 	// Every render, initalize currentNode object. Logic to find the object else render "Create New Note" menu
 	const currentNote =
@@ -52,6 +54,13 @@ export default function App() {
 			setCurrentNoteId(notes[0]?.id);
 		}
 	}, [notes]);
+
+	// If currentNote changes (like selecting another note tab), override our setTempNoteText to be our new current body to record the keystrokes
+	useEffect(() => {
+		if (currentNote) {
+			setTempNoteText(currentNote.body);
+		}
+	}, [currentNote]);
 
 	// void; creates newNote object.
 	// Add newNote to beginning of notes state... thus, update currentNoteId as newNode.id
@@ -94,7 +103,10 @@ export default function App() {
 						newNote={createNewNote}
 						deleteNote={deleteNote}
 					/>
-					<Editor currentNote={currentNote} updateNote={updateNote} />
+					<Editor
+						tempNoteText={tempNoteText}
+						setTempNoteText={setTempNoteText}
+					/>
 				</Split>
 			) : (
 				<div className="no-notes">

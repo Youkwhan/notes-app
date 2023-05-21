@@ -3,7 +3,7 @@ import ReactMde from "react-mde";
 import Showdown from "showdown";
 import PropTypes from "prop-types";
 
-export default function Editor({ currentNote, updateNote }) {
+export default function Editor({ tempNoteText, setTempNoteText }) {
 	const [selectedTab, setSelectedTab] = useState("write");
 
 	// preview tab basically
@@ -14,12 +14,12 @@ export default function Editor({ currentNote, updateNote }) {
 		tasklists: true,
 	});
 
-   // render Markdown Editor + js converter => html (preview tab) 
+	// render Markdown Editor + js converter => html (preview tab)
 	return (
 		<section className="pane editor">
 			<ReactMde
-				value={currentNote?.body}
-				onChange={updateNote}
+				value={tempNoteText}
+				onChange={setTempNoteText}
 				selectedTab={selectedTab}
 				onTabChange={setSelectedTab}
 				generateMarkdownPreview={(markdown) =>
@@ -33,6 +33,6 @@ export default function Editor({ currentNote, updateNote }) {
 }
 
 Editor.propTypes = {
-	currentNote: PropTypes.object.isRequired,
-	updateNote: PropTypes.func.isRequired,
+	tempNoteText: PropTypes.string.isRequired,
+	setTempNoteText: PropTypes.func.isRequired,
 };
